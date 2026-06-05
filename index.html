@@ -742,7 +742,7 @@ function tap(player, choice, btn){
   // Show too-fast indicator
   if(tooFast){
     const pp=document.getElementById('pp'+player);
-    pp.textContent='+450';
+    pp.textContent='+800';
     pp.classList.remove('show'); void pp.offsetWidth; pp.classList.add('show');
     setTimeout(()=>pp.classList.remove('show'),650);
   }
