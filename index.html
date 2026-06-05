@@ -201,6 +201,69 @@ html,body{height:100%;overflow:hidden;background:var(--bg);font-family:'Tajawal'
 /* PARTICLES */
 .particle{position:fixed;pointer-events:none;border-radius:50%;animation:pFly .65s ease-out forwards}
 @keyframes pFly{from{transform:translate(0,0) scale(1);opacity:1}to{transform:translate(var(--tx),var(--ty)) scale(0);opacity:0}}
+
+/* DARK MODE */
+body.dark{
+  --bg:#141210;--paper:#1E1B18;--ink:#F0EDE8;--ink2:#C8C2BA;
+  --muted:#6B6560;--border:#2E2A26;
+  --shadow-sm:0 1px 3px rgba(0,0,0,.35);
+  --shadow:0 4px 16px rgba(0,0,0,.5),0 1px 4px rgba(0,0,0,.3);
+}
+body.dark .title-grid{opacity:.12}
+body.dark .name-input{background:var(--paper);color:var(--ink)}
+body.dark .ans-btn{color:var(--ink)}
+body.dark .rounds-ctrl{background:var(--paper)}
+
+/* DARK TOGGLE */
+.dark-toggle{
+  position:absolute;top:14px;right:14px;width:36px;height:36px;
+  border-radius:50%;border:1.5px solid var(--border);background:transparent;
+  font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;
+  transition:border-color .2s,background .2s;z-index:10;
+}
+.dark-toggle:active{transform:scale(.88)}
+
+/* ABOUT BUTTON */
+.about-btn{
+  position:absolute;bottom:14px;left:50%;transform:translateX(-50%);
+  font-family:'Inter',sans-serif;font-size:11px;font-weight:600;
+  color:var(--muted);letter-spacing:.1em;text-transform:uppercase;
+  background:none;border:1px solid var(--border);border-radius:20px;
+  padding:5px 14px;cursor:pointer;transition:color .2s,border-color .2s;
+  white-space:nowrap;
+}
+.about-btn:hover{color:var(--ink);border-color:var(--muted)}
+
+/* ABOUT MODAL */
+.modal-backdrop{
+  position:fixed;inset:0;background:rgba(0,0,0,.55);backdrop-filter:blur(3px);
+  display:flex;align-items:center;justify-content:center;
+  z-index:500;opacity:0;pointer-events:none;transition:opacity .22s;padding:20px;
+}
+.modal-backdrop.open{opacity:1;pointer-events:all}
+.modal-box{
+  background:var(--paper);border-radius:var(--r-lg);
+  padding:26px 22px 20px;width:min(370px,92vw);max-height:82vh;
+  overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.25);
+  transform:translateY(12px);transition:transform .22s;
+  font-family:'Inter',sans-serif;
+}
+.modal-backdrop.open .modal-box{transform:translateY(0)}
+.modal-title{font-family:'Bebas Neue',sans-serif;font-size:34px;letter-spacing:.04em;color:var(--ink);margin-bottom:2px}
+.modal-tag{font-size:10px;font-weight:700;color:var(--muted);letter-spacing:.16em;text-transform:uppercase;margin-bottom:16px;display:block}
+.modal-section{margin-bottom:14px}
+.modal-section h3{font-size:10px;font-weight:700;color:var(--muted);letter-spacing:.14em;text-transform:uppercase;margin-bottom:6px}
+.modal-section p{font-size:13px;color:var(--ink2);line-height:1.65;margin-bottom:6px}
+.modal-section ul{padding-left:14px;margin:0}
+.modal-section li{font-size:13px;color:var(--ink2);line-height:1.6;margin-bottom:3px}
+.modal-divider{height:1px;background:var(--border);margin:14px 0}
+.modal-close{
+  width:100%;margin-top:6px;padding:13px;
+  background:var(--ink);color:#FFF;
+  font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:.1em;
+  border:none;border-radius:var(--r);cursor:pointer;transition:filter .1s;
+}
+.modal-close:active{filter:brightness(1.4)}
 </style>
 </head>
 <body>
@@ -211,6 +274,7 @@ html,body{height:100%;overflow:hidden;background:var(--bg);font-family:'Tajawal'
 <!-- TITLE -->
 <div class="screen" id="titleScreen">
   <div class="title-grid"></div>
+  <button class="dark-toggle" id="darkToggle" title="Toggle dark mode">🌙</button>
   <div class="title-content">
     <div class="title-eyebrow">1v1 · Speed Duel</div>
     <div class="title-word">SIG<em>N</em>AL</div>
@@ -236,6 +300,61 @@ html,body{height:100%;overflow:hidden;background:var(--bg);font-family:'Tajawal'
       </div>
     </div>
     <button class="start-btn" id="startBtn">▶ START DUEL</button>
+  </div>
+  <button class="about-btn" id="aboutBtn">About & Instructions</button>
+</div>
+
+<!-- ABOUT MODAL -->
+<div class="modal-backdrop" id="aboutModal">
+  <div class="modal-box">
+    <div class="modal-title">SIGNAL</div>
+    <span class="modal-tag">1v1 Reaction Speed Duel</span>
+
+    <div class="modal-section">
+      <h3>What is this?</h3>
+      <p>SIGNAL is a two-player reaction time game played on one phone. It measures <strong>choice reaction time</strong> — how fast your brain can identify a stimulus and select the correct response. This is a validated cognitive science measure of processing speed.</p>
+      <p>Unlike simple reflex games, SIGNAL uses categorization tasks (colours, directions, numbers, animals) that require genuine cognitive processing, not just twitchy fingers.</p>
+    </div>
+
+    <div class="modal-divider"></div>
+
+    <div class="modal-section">
+      <h3>How to play</h3>
+      <ul>
+        <li>Place the phone between two players. Player 1 sits at the top (phone rotated), Player 2 at the bottom.</li>
+        <li>Each round, a stimulus appears on both sides of the screen.</li>
+        <li>Tap the correct answer from the buttons below your stimulus — as fast as possible.</li>
+        <li>Both players answer simultaneously. The round ends when both answer correctly or time runs out.</li>
+      </ul>
+    </div>
+
+    <div class="modal-divider"></div>
+
+    <div class="modal-section">
+      <h3>Scoring</h3>
+      <ul>
+        <li><strong>Correct answer</strong> — your reaction time for that round is saved.</li>
+        <li><strong>First wrong tap</strong> — +500ms penalty added to your score.</li>
+        <li><strong>Second or third wrong tap</strong> — +100ms each.</li>
+        <li><strong>No answer before time runs out</strong> — the full round duration is added. Very punishing.</li>
+        <li>Winner = lowest average reaction time across all rounds.</li>
+      </ul>
+    </div>
+
+    <div class="modal-divider"></div>
+
+    <div class="modal-section">
+      <h3>Task types</h3>
+      <ul>
+        <li><strong>Arrow direction</strong> — tap which way the arrow points.</li>
+        <li><strong>Odd or even</strong> — categorize the number shown.</li>
+        <li><strong>Shape colour</strong> — tap the colour of the shape, not the word written on it.</li>
+        <li><strong>Larger number</strong> — pick the bigger of two numbers.</li>
+        <li><strong>Land or sea</strong> — categorize the animal shown.</li>
+      </ul>
+    </div>
+
+    <button class="modal-close" id="modalClose">Got it — Let's Play</button>
   </div>
 </div>
 
@@ -414,7 +533,7 @@ function freshState(p1,p2,total){
     p1, p2, total,
     round: 0,
     done1: false, done2: false,
-    penaltyApplied1: false, penaltyApplied2: false,
+    wrongCount1: 0, wrongCount2: 0,  // wrong tap count per round
     lockUntil1: 0, lockUntil2: 0,
     times1: [], times2: [],
     // per-category: {direction:{t1:[],t2:[]}, parity:..., colour:..., compare:..., animal:...}
@@ -447,6 +566,22 @@ function saveNames(){
   localStorage.setItem('signal_name2',document.getElementById('name2').value.trim());
 }
 loadNames();
+
+// ── DARK MODE ────────────────────────────────────────
+const darkToggle=document.getElementById('darkToggle');
+function applyDark(on){
+  document.body.classList.toggle('dark',on);
+  darkToggle.textContent=on?'☀️':'🌙';
+  localStorage.setItem('signal_dark',on?'1':'0');
+}
+applyDark(localStorage.getItem('signal_dark')==='1');
+darkToggle.addEventListener('click',()=>applyDark(!document.body.classList.contains('dark')));
+
+// ── ABOUT MODAL ──────────────────────────────────────
+const aboutModal=document.getElementById('aboutModal');
+document.getElementById('aboutBtn').addEventListener('click',()=>aboutModal.classList.add('open'));
+document.getElementById('modalClose').addEventListener('click',()=>aboutModal.classList.remove('open'));
+aboutModal.addEventListener('click',e=>{ if(e.target===aboutModal) aboutModal.classList.remove('open'); });
 
 // ── ROUNDS COUNTER ───────────────────────────────────
 let rounds=10;
@@ -486,7 +621,7 @@ function countdown(cb){
 function nextRound(){
   G.round++;
   G.done1=false; G.done2=false;
-  G.penaltyApplied1=false; G.penaltyApplied2=false;
+  G.wrongCount1=0; G.wrongCount2=0;
   G.lockUntil1=0; G.lockUntil2=0;
   G.roundActive=false;
 
@@ -556,17 +691,22 @@ function tap(player, choice, btn){
   }
 
   if(!correct){
-    // Apply tap lockout only for wrong answers
+    // Apply tap lockout
     if(player===1) G.lockUntil1=now+PENALTY_MS;
     else G.lockUntil2=now+PENALTY_MS;
 
-    // Apply 500ms score penalty — only once per round
-    const alreadyPenalised = player===1 ? G.penaltyApplied1 : G.penaltyApplied2;
-    if(!alreadyPenalised){
-      if(player===1) G.penaltyApplied1=true;
-      else G.penaltyApplied2=true;
-      // Show +500 pop
+    // Tiered penalty: 500ms first wrong, 100ms second & third, 0ms after
+    const wc = player===1 ? G.wrongCount1 : G.wrongCount2;
+    let add = 0;
+    if(wc===0) add=500;
+    else if(wc===1||wc===2) add=100;
+    if(player===1){ G.wrongCount1++; }
+    else { G.wrongCount2++; }
+
+    // Show penalty pop with correct amount
+    if(add>0){
       const pp=document.getElementById('pp'+player);
+      pp.textContent='+'+add;
       pp.classList.remove('show'); void pp.offsetWidth; pp.classList.add('show');
       setTimeout(()=>pp.classList.remove('show'),650);
     }
@@ -584,8 +724,13 @@ function tap(player, choice, btn){
 
   // ── CORRECT ──
   const rt=now-G.roundStart;
-  const penalty = (player===1 ? G.penaltyApplied1 : G.penaltyApplied2) ? PENALTY_ADD : 0;
-  const finalTime = rt + penalty;
+  // Calculate total penalty accumulated this round
+  const wc = player===1 ? G.wrongCount1 : G.wrongCount2;
+  let totalPenalty=0;
+  if(wc>=1) totalPenalty+=500;
+  if(wc>=2) totalPenalty+=100;
+  if(wc>=3) totalPenalty+=100;
+  const finalTime = rt + totalPenalty;
   const cat = G.stimulus.category;
 
   if(player===1){
