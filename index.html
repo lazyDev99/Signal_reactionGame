@@ -336,8 +336,8 @@ body.dark .rounds-ctrl{background:var(--paper)}
         <li><strong>Correct answer</strong> — your reaction time for that round is saved.</li>
         <li><strong>First wrong tap</strong> — +500ms penalty added to your score.</li>
         <li><strong>Second or third wrong tap</strong> — +100ms each.</li>
+        <li><strong>Too fast (&lt;185ms)</strong> — answering correctly in under 185ms adds +450ms. Genuine reactions don't happen that fast.</li>
         <li><strong>No answer before time runs out</strong> — the full round duration is added. Very punishing.</li>
-        <li>Winner = lowest average reaction time across all rounds.</li>
       </ul>
     </div>
 
@@ -724,13 +724,28 @@ function tap(player, choice, btn){
 
   // ── CORRECT ──
   const rt=now-G.roundStart;
+
+  // Too-fast penalty: sub-185ms taps are almost certainly pre-emptive
+  const TOO_FAST_MS = 185;
+  const TOO_FAST_PENALTY = 450;
+  const tooFast = rt < TOO_FAST_MS;
+
   // Calculate total penalty accumulated this round
   const wc = player===1 ? G.wrongCount1 : G.wrongCount2;
   let totalPenalty=0;
   if(wc>=1) totalPenalty+=500;
   if(wc>=2) totalPenalty+=100;
   if(wc>=3) totalPenalty+=100;
+  if(tooFast) totalPenalty+=TOO_FAST_PENALTY;
   const finalTime = rt + totalPenalty;
+
+  // Show too-fast indicator
+  if(tooFast){
+    const pp=document.getElementById('pp'+player);
+    pp.textContent='+450';
+    pp.classList.remove('show'); void pp.offsetWidth; pp.classList.add('show');
+    setTimeout(()=>pp.classList.remove('show'),650);
+  }
   const cat = G.stimulus.category;
 
   if(player===1){
