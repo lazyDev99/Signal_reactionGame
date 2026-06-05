@@ -726,8 +726,8 @@ function tap(player, choice, btn){
   const rt=now-G.roundStart;
 
   // Too-fast penalty: sub-185ms taps are almost certainly pre-emptive
-  const TOO_FAST_MS = 185;
-  const TOO_FAST_PENALTY = 450;
+  const TOO_FAST_MS = 175;
+  const TOO_FAST_PENALTY = 800;
   const tooFast = rt < TOO_FAST_MS;
 
   // Calculate total penalty accumulated this round
